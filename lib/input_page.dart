@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'reusable_card.dart';
 import 'icon_content.dart';
+import 'constatnts.dart';
 
-const bottomContainerHight = 80.0;
-const bottomContainerColor = Color(0xFFEB1555);
-const activeCardColour = Color(0xFF1D1E33);
-const inactiveCsrdColour = Color(0xFF111328);
-const containerLableColor = Color(0xFF8D8E98);
+enum GenderType {
+  male,
+  female,
+}
 
 class InputPage extends StatefulWidget {
   @override
@@ -17,27 +17,8 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   int age = 0;
   int weight = 0;
-  Color maleCardColour = inactiveCsrdColour;
-  Color femaleCardColour = inactiveCsrdColour;
-
-  // 1 == male, 2 == female
-  void updateColour(int gender) {
-    if (gender == 1) {
-      if (maleCardColour == inactiveCsrdColour) {
-        maleCardColour = activeCardColour;
-        femaleCardColour = inactiveCsrdColour;
-      } else {
-        maleCardColour = inactiveCsrdColour;
-      }
-    } else {
-      if (femaleCardColour == inactiveCsrdColour) {
-        femaleCardColour = activeCardColour;
-        maleCardColour = inactiveCsrdColour;
-      } else {
-        femaleCardColour = inactiveCsrdColour;
-      }
-    }
-  }
+  int hight = 150;
+  GenderType? selectedGender;
 
   @override
   Widget build(BuildContext context) {
@@ -48,38 +29,43 @@ class _InputPageState extends State<InputPage> {
         ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
             child: Row(
               children: [
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
+                  child: ReusableCard(
+                    onPress: () {
                       setState(() {
-                        updateColour(1);
+                        selectedGender = GenderType.male;
                       });
                     },
-                    child: ReusableCard(
-                      cardChild: IconContent(
-                          gender: "male", genderSign: FontAwesomeIcons.mars),
-                      colour: maleCardColour,
+                    cardChild: IconContent(
+                      gender: "male",
+                      genderSign: FontAwesomeIcons.mars,
+                      iconColor: Colors.blue,
                     ),
+                    colour: selectedGender == GenderType.male
+                        ? kActiveCardColour
+                        : kInactiveCsrdColour,
                   ),
                 ),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
+                  child: ReusableCard(
+                    onPress: () {
                       setState(() {
-                        updateColour(2);
+                        selectedGender = GenderType.female;
                       });
                     },
-                    child: ReusableCard(
-                      cardChild: IconContent(
-                        gender: "FEMALE",
-                        genderSign: FontAwesomeIcons.venus,
-                      ),
-                      colour: femaleCardColour,
+                    cardChild: IconContent(
+                      gender: "FEMALE",
+                      genderSign: FontAwesomeIcons.venus,
+                      iconColor: kBottomContainerColor,
                     ),
+                    colour: selectedGender == GenderType.female
+                        ? kActiveCardColour
+                        : kInactiveCsrdColour,
                   ),
                 ),
               ],
@@ -88,22 +74,45 @@ class _InputPageState extends State<InputPage> {
           Expanded(
             child: ReusableCard(
               cardChild: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    FontAwesomeIcons.mars,
-                    size: 80.0,
-                  ),
-                  SizedBox(height: 15),
                   Text(
-                    "MALE",
+                    'HIGHT',
                     style: TextStyle(
                       fontSize: 18,
-                      color: Color(0xFF8D8E98),
+                      color: kContainerLableColor,
                     ),
                   ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        hight.toString(),
+                        style: kNumberTextStyle,
+                      ),
+                      const Text('cm', style: kLableTextStyle),
+                    ],
+                  ),
+                  Slider(
+                    value: hight.toDouble(),
+                    min: 120,
+                    max: 220,
+                    activeColor: Color(0xFFEB1555),
+                    inactiveColor: Color(0xFF8D8E98),
+                    onChanged: (double newValue) {
+                      setState(() {
+                        hight = newValue.round();
+                      });
+                    },
+                  )
                 ],
               ),
-              colour: activeCardColour,
+              colour: kActiveCardColour,
             ),
           ),
           Expanded(
@@ -118,13 +127,12 @@ class _InputPageState extends State<InputPage> {
                           'WEIGHT',
                           style: TextStyle(
                             fontSize: 18,
-                            color: containerLableColor,
+                            color: kContainerLableColor,
                           ),
                         ),
-                        SizedBox(height: 5),
                         Text(
                           weight.toString(),
-                          style: TextStyle(fontSize: 40),
+                          style: kNumberTextStyle,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -156,7 +164,7 @@ class _InputPageState extends State<InputPage> {
                         ),
                       ],
                     ),
-                    colour: activeCardColour,
+                    colour: kActiveCardColour,
                   ),
                 ),
                 Expanded(
@@ -164,17 +172,16 @@ class _InputPageState extends State<InputPage> {
                     cardChild: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'AGE',
                           style: TextStyle(
                             fontSize: 18,
-                            color: containerLableColor,
+                            color: kContainerLableColor,
                           ),
                         ),
-                        SizedBox(height: 5),
                         Text(
                           age.toString(),
-                          style: TextStyle(fontSize: 40),
+                          style: kNumberTextStyle,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -206,7 +213,7 @@ class _InputPageState extends State<InputPage> {
                         ),
                       ],
                     ),
-                    colour: activeCardColour,
+                    colour: kActiveCardColour,
                   ),
                 ),
               ],
@@ -219,10 +226,10 @@ class _InputPageState extends State<InputPage> {
                 style: TextStyle(fontSize: 30),
               ),
             ),
-            color: bottomContainerColor,
+            color: kBottomContainerColor,
             margin: EdgeInsets.only(top: 10),
             width: double.infinity,
-            height: bottomContainerHight,
+            height: kBottomContainerHight,
           ),
         ],
       ),
@@ -235,7 +242,7 @@ class _InputPageState extends State<InputPage> {
       children: [
         Text(
           cardName,
-          style: TextStyle(fontSize: 18, color: containerLableColor),
+          style: TextStyle(fontSize: 18, color: kContainerLableColor),
         ),
         SizedBox(height: 5),
         Text(
@@ -255,7 +262,7 @@ class _InputPageState extends State<InputPage> {
                   }
                 });
               },
-              backgroundColor: containerLableColor,
+              backgroundColor: kContainerLableColor,
               child: Icon(Icons.remove),
             ),
             SizedBox(
@@ -267,7 +274,7 @@ class _InputPageState extends State<InputPage> {
                   variableName++;
                 });
               },
-              backgroundColor: containerLableColor,
+              backgroundColor: kContainerLableColor,
               child: Icon(Icons.add),
             ),
           ],

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-
-const containerLableColor = Color(0xFF8D8E98);
-const lableTextStyle = TextStyle(fontSize: 18, color: containerLableColor);
-const iconSize = 80.0;
+import 'constatnts.dart';
 
 class IconContent extends StatelessWidget {
   final String gender;
   final IconData genderSign;
-  IconContent({required this.gender, required this.genderSign});
+  final Color iconColor;
+  IconContent(
+      {required this.gender,
+      required this.genderSign,
+      required this.iconColor});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +17,11 @@ class IconContent extends StatelessWidget {
       children: [
         Icon(
           genderSign,
-          size: iconSize,
+          size: kIconSize,
+          color: iconColor,
         ),
         SizedBox(height: 15),
-        Text(gender, style: lableTextStyle),
+        Text(gender, style: kLableTextStyle),
       ],
     );
   }
