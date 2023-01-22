@@ -10,6 +10,8 @@ enum GenderType {
 }
 
 class InputPage extends StatefulWidget {
+  const InputPage({super.key});
+
   @override
   _InputPageState createState() => _InputPageState();
 }
@@ -17,14 +19,14 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   int age = 0;
   int weight = 0;
-  int hight = 150;
+  int hight = 170;
   GenderType? selectedGender;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
+        title: const Center(
           child: Text('BMI CALCULATOR'),
         ),
       ),
@@ -98,17 +100,27 @@ class _InputPageState extends State<InputPage> {
                       const Text('cm', style: kLableTextStyle),
                     ],
                   ),
-                  Slider(
-                    value: hight.toDouble(),
-                    min: 120,
-                    max: 220,
-                    activeColor: Color(0xFFEB1555),
-                    inactiveColor: Color(0xFF8D8E98),
-                    onChanged: (double newValue) {
-                      setState(() {
-                        hight = newValue.round();
-                      });
-                    },
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      inactiveTrackColor: const Color(0xFF8D8E98),
+                      activeTrackColor: Colors.white,
+                      thumbColor: Color(0xFFEB1555),
+                      overlayColor: Color(0x29EB1555),
+                      thumbShape:
+                          const RoundSliderThumbShape(enabledThumbRadius: 15.0),
+                      overlayShape:
+                          const RoundSliderOverlayShape(overlayRadius: 30.0),
+                    ),
+                    child: Slider(
+                      value: hight.toDouble(),
+                      min: 120,
+                      max: 220,
+                      onChanged: (double newValue) {
+                        setState(() {
+                          hight = newValue.round();
+                        });
+                      },
+                    ),
                   )
                 ],
               ),
@@ -137,7 +149,8 @@ class _InputPageState extends State<InputPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            FloatingActionButton(
+                            RoundIconButton(
+                              icon: FontAwesomeIcons.minus,
                               onPressed: () {
                                 setState(() {
                                   if (weight > 0) {
@@ -145,20 +158,17 @@ class _InputPageState extends State<InputPage> {
                                   }
                                 });
                               },
-                              backgroundColor: Color(0xFF8D8E98),
-                              child: Icon(Icons.remove),
                             ),
                             SizedBox(
                               width: 10,
                             ),
-                            FloatingActionButton(
+                            RoundIconButton(
+                              icon: FontAwesomeIcons.plus,
                               onPressed: () {
                                 setState(() {
                                   weight++;
                                 });
                               },
-                              backgroundColor: Color(0xFF8D8E98),
-                              child: Icon(Icons.add),
                             ),
                           ],
                         ),
@@ -186,7 +196,8 @@ class _InputPageState extends State<InputPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            FloatingActionButton(
+                            RoundIconButton(
+                              icon: FontAwesomeIcons.minus,
                               onPressed: () {
                                 setState(() {
                                   if (age > 0) {
@@ -194,20 +205,17 @@ class _InputPageState extends State<InputPage> {
                                   }
                                 });
                               },
-                              backgroundColor: Color(0xFF8D8E98),
-                              child: Icon(Icons.remove),
                             ),
                             SizedBox(
                               width: 10,
                             ),
-                            FloatingActionButton(
+                            RoundIconButton(
+                              icon: FontAwesomeIcons.plus,
                               onPressed: () {
                                 setState(() {
                                   age++;
                                 });
                               },
-                              backgroundColor: Color(0xFF8D8E98),
-                              child: Icon(Icons.add),
                             ),
                           ],
                         ),
@@ -235,51 +243,26 @@ class _InputPageState extends State<InputPage> {
       ),
     );
   }
+}
 
-  Column ageWeightCardes(String cardName, int variableName) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          cardName,
-          style: TextStyle(fontSize: 18, color: kContainerLableColor),
-        ),
-        SizedBox(height: 5),
-        Text(
-          variableName.toString(),
-          style: TextStyle(
-            fontSize: 40,
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  if (variableName > 0) {
-                    variableName--;
-                  }
-                });
-              },
-              backgroundColor: kContainerLableColor,
-              child: Icon(Icons.remove),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  variableName++;
-                });
-              },
-              backgroundColor: kContainerLableColor,
-              child: Icon(Icons.add),
-            ),
-          ],
-        ),
-      ],
+class RoundIconButton extends StatelessWidget {
+  final IconData icon;
+  final void Function() onPressed;
+  RoundIconButton({required this.icon, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      child: Icon(icon),
+      elevation: 0,
+      disabledElevation: 6,
+      shape: CircleBorder(),
+      fillColor: Color(0xFF4C4F5E),
+      onPressed: onPressed,
+      constraints: const BoxConstraints.tightFor(
+        width: 56,
+        height: 56,
+      ),
     );
   }
 }
